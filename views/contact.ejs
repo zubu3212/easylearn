@@ -1,0 +1,8 @@
+<%- include('partials/header') %>
+<main class="wrap narrow center"><h1>Contact Us</h1>
+  <div class="card"><h3><%= site.owner || brand %></h3>
+    <% if (site.phone) { %><p>📞 <a href="tel:<%= site.phone %>"><%= site.phone %></a></p><% } %>
+    <% if (site.email) { %><p>✉️ <a href="mailto:<%= site.email %>"><%= site.email %></a></p><% } %>
+    <% if (site.address) { %><p>📍 <%= site.address %></p><% } %>
+    <a class="btn primary" href="/admission">Send an admission request</a></div></main>
+<%- include('partials/footer') %>

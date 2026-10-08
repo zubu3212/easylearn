@@ -1,0 +1,15 @@
+<%- include('../partials/header', { title: editing ? 'Edit Student' : 'Add Student' }) %>
+<main class="wrap narrow">
+  <form method="post" class="card form">
+    <h1><%= editing ? 'Edit Student' : 'Add Student' %></h1>
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label>Username<input name="username" value="<%= s.username || '' %>" required pattern="[a-zA-Z0-9_.]{3,30}"></label>
+    <label>Email<input type="email" name="email" value="<%= s.email || '' %>" required></label>
+    <label>Phone<input name="phone" value="<%= s.phone || '' %>" pattern="[0-9+\-\s]{7,20}"></label>
+    <label>Password<%= editing ? ' (leave blank to keep current)' : '' %>
+      <input type="password" name="password" minlength="8" autocomplete="new-password" <%= editing ? '' : 'required' %>></label>
+    <button class="btn primary"><%= editing ? 'Update' : 'Add Student' %></button>
+    <a class="btn" href="/admin/students">Cancel</a>
+  </form>
+</main>
+<%- include('../partials/footer') %>

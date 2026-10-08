@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+<main class="wrap"><h1 class="center">Admission Form</h1>
+  <form method="post" action="/apply" class="card form narrow">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label>Name<input name="name" required minlength="2" maxlength="100"></label>
+    <label>Email<input type="email" name="email" required></label>
+    <label>Phone<input name="phone" inputmode="tel" pattern="[0-9+\-\s]{7,20}"></label>
+    <label>Message<textarea name="message" rows="4" maxlength="1000"></textarea></label>
+    <button class="btn primary">Apply Now</button>
+  </form></main>
+<%- include('partials/footer') %>

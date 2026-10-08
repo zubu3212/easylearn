@@ -1,0 +1,48 @@
+<%- include('../partials/header', { title: 'Dashboard' }) %>
+<main class="wrap">
+  <h1>Dashboard</h1>
+  <% if (s.pending_teachers) { %><a class="card note tile" href="/admin/teachers"><b>👩‍🏫 <%= s.pending_teachers %> teacher signup(s) waiting for approval</b><span>Review →</span></a><% } %>
+  <section class="grid4">
+    <div class="card stat s1"><span><%= s.students %></span>Students</div>
+    <div class="card stat s2"><span><%= s.pending %></span>Pending admissions<a href="/admin/admissions?status=pending">Review →</a></div>
+    <div class="card stat s3"><span><%= s.courses %></span>Courses</div>
+    <div class="card stat s4"><span><%= s.avg_marks ?? '—' %></span>Average marks</div>
+  </section>
+
+  <section class="grid2">
+    <div class="card"><h3>Admissions · last 7 days</h3>
+      <% const mx = Math.max(1, ...week.map(w => w.n)); %>
+      <svg viewBox="0 0 290 130" class="chart" role="img" aria-label="Admissions per day">
+        <% week.forEach((w, i) => { const h = Math.round(w.n / mx * 80); %>
+          <rect x="<%= 12 + i * 39 %>" y="<%= 95 - h %>" width="26" height="<%= Math.max(h, 3) %>" rx="6"/>
+          <text x="<%= 25 + i * 39 %>" y="<%= 90 - h %>" text-anchor="middle"><%= w.n %></text>
+          <text x="<%= 25 + i * 39 %>" y="115" text-anchor="middle" class="lbl"><%= w.lbl %></text>
+        <% }) %>
+      </svg>
+    </div>
+    <div class="card"><h3>Grade distribution</h3>
+      <% const tot = Math.max(1, Object.values(dist).reduce((a, b) => a + b, 0)); %>
+      <% Object.entries(dist).forEach(([g, n]) => { %>
+        <div class="row-bar"><b><%= g %></b><progress value="<%= n %>" max="<%= tot %>"></progress><em><%= n %></em></div>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="grid2">
+    <div class="card"><h3>🏆 Top students</h3>
+      <% if (!top.length) { %><p class="muted">No results yet.</p><% } %>
+      <% top.forEach((t, i) => { %><div class="row-bar"><b>#<%= i + 1 %></b><span class="grow"><%= t.username %></span><em><%= t.avg %></em></div><% }) %>
+    </div>
+    <div class="card"><h3>Course performance</h3>
+      <% courses.forEach(c => { %><div class="row-bar"><span class="grow"><%= c.title %> <small class="muted">(<%= c.n %>)</small></span>
+        <progress value="<%= c.avg || 0 %>" max="100"></progress><em><%= c.avg ?? '—' %></em></div><% }) %>
+    </div>
+  </section>
+
+  <h2>Latest admission requests</h2>
+  <% if (!recent.length) { %><p class="muted">No requests yet.</p><% } else { %>
+  <div class="scroll"><table><tr><th>Name</th><th>Email</th><th>Status</th><th>Date</th></tr>
+    <% recent.forEach(a => { %><tr><td><%= a.name %></td><td><%= a.email %></td><td><span class="badge <%= a.status %>"><%= a.status %></span></td><td><%= a.created_at.toLocaleDateString() %></td></tr><% }) %>
+  </table></div><% } %>
+</main>
+<%- include('../partials/footer') %>

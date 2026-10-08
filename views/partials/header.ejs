@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= typeof title !== 'undefined' ? title + ' · ' : '' %><%= brand %></title><link rel="icon" href="/favicon.svg">
+<script src="/theme.js"></script><link rel="stylesheet" href="/style.css">
+</head><body>
+<% const logout = `<form method="post" action="/logout" class="inline"><input type="hidden" name="_csrf" value="${csrf}"><button class="btn danger">⎋ Logout</button></form>`; %>
+<% if (shell) {
+  const home = homeOf(user.role);
+  const links = user.role === 'admin'
+    ? [['/admin','📊','Dashboard'],['/admin/admissions','📝','Admissions'],['/admin/students','🎓','Students'],['/admin/teachers','👩‍🏫','Teachers'],['/admin/courses','📚','Courses'],['/admin/attendance','🗓','Attendance'],['/admin/results','🏆','Results'],['/admin/announcements','📣','Announcements'],['/student/profile','👤','Profile']]
+    : user.role === 'teacher'
+      ? [['/teacher','🏠','Dashboard'],['/admin/attendance','🗓','Attendance'],['/admin/results','🏆','Results'],['/admin/announcements','📣','Announcements'],['/student/profile','👤','Profile']]
+      : [['/student','🏠','My Portal'],['/student/profile','👤','Profile']]; %>
+<div class="shell">
+  <aside class="side">
+    <a class="logo" href="/">✦ <%= brand %></a>
+    <nav><% links.forEach(l => { const on = path === l[0] || (l[0] !== '/admin' && l[0] !== '/student' && path.startsWith(l[0])); %>
+      <a href="<%= l[0] %>" class="<%= on ? 'on' : '' %>"><span><%= l[1] %></span><%= l[2] %></a><% }) %></nav>
+    <div class="side-foot">
+      <a href="/">🌐 Website</a>
+      <button class="link" data-theme-toggle type="button">🌓 Theme</button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <button class="btn" data-back="<%= home %>" type="button">← Back</button>
+      <span class="grow"></span>
+      <span class="pill"><%= user.role %></span><b><%= user.username %></b>
+      <%- logout %>
+    </div>
+<% } else { %>
+<nav class="nav">
+  <a class="logo" href="/">✦ <%= brand %></a>
+  <div class="links">
+    <% [['/','Home'],['/about','About'],['/courses','Courses'],['/teachers','Teachers'],['/admission','Admission'],['/contact','Contact']].forEach(l => { %>
+      <a href="<%= l[0] %>" class="<%= path === l[0] ? 'on' : '' %>"><%= l[1] %></a><% }) %>
+    <button class="btn" data-theme-toggle type="button">🌓</button>
+    <% if (user) { %><a class="btn primary" href="<%= homeOf(user.role) %>">Dashboard</a><%- logout %>
+    <% } else { %><a class="btn" href="/signup">Sign up</a><a class="btn primary" href="/login">Login</a><% } %>
+  </div>
+</nav>
+<% if (path !== '/') { %><div class="wrap backrow"><button class="btn" data-back="/" type="button">← Back</button></div><% } %>
+<% } %>
+<% if (flash) { %><div class="flash <%= flash.type %>"><%= flash.msg %></div><% } %>

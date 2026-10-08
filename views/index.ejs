@@ -1,0 +1,35 @@
+<%- include('partials/header') %>
+<header class="hero"><img src="/img/class.jpg" alt="Classroom">
+  <div class="hero-in"><span class="pill">Admissions open</span><h1><%= site.tagline %></h1>
+    <p>Industry-focused courses, expert mentors and real-world projects at <%= brand %>.</p>
+    <div><a class="btn primary" href="/admission">Apply Now</a> <a class="btn" href="/courses">Explore Courses</a></div></div></header>
+<section class="strip"><div><b><%= stats.students %>+</b>Students</div><div><b><%= stats.courses %></b>Courses</div><div><b>3</b>Expert mentors</div><div><b>100%</b>Project based</div></section>
+<main class="wrap">
+  <h2 class="center">Why choose us</h2>
+  <section class="grid3">
+    <% [['🧑‍💻','Project-based learning','Build real portfolio projects from week one.'],['👩‍🏫','Expert mentors','Learn from working professionals.'],['💼','Freelancing ready','Skills and guidance to start earning.'],
+        ['📈','Track progress','Results, GPA, rank and attendance in your portal.'],['📣','Stay informed','Instant announcements from your institute.'],['🎓','Flexible & affordable','Courses designed for every budget and schedule.']].forEach(f => { %>
+      <div class="card feat"><div class="ico"><%= f[0] %></div><h3><%= f[1] %></h3><p class="muted"><%= f[2] %></p></div><% }) %>
+  </section>
+
+  <h2 class="center">Popular courses</h2>
+  <section class="grid3"><% courses.forEach(c => { %>
+    <div class="card"><% if (c.image) { %><img class="rounded" src="/img/<%= c.image %>" alt="<%= c.title %>"><% } %><h3><%= c.title %></h3><p class="muted"><%= c.description %></p></div><% }) %></section>
+  <p class="center"><a class="btn" href="/courses">View all courses →</a></p>
+
+  <h2 class="center">What students say</h2>
+  <section class="grid3">
+    <% [['Rahim A.','Web Development','The projects gave me the confidence to take my first client.'],['Nusrat J.','Graphic Design','Mentors are supportive and the portal makes tracking progress easy.'],['Sabbir H.','Digital Marketing','Practical lessons, clear results. Highly recommended.']].forEach(t => { %>
+      <div class="card"><p>⭐⭐⭐⭐⭐</p><p>“<%= t[2] %>”</p><b><%= t[0] %></b> <small class="muted">· <%= t[1] %></small></div><% }) %>
+  </section>
+
+  <h2 class="center">FAQ</h2>
+  <section class="faq">
+    <details class="card"><summary>How do I apply?</summary><p class="muted">Fill the <a href="/admission">admission form</a>. We will contact you and create your student account.</p></details>
+    <details class="card"><summary>Where can I see my results?</summary><p class="muted">Log in to your student portal to see results, GPA, rank and attendance.</p></details>
+    <details class="card"><summary>Can I change my password?</summary><p class="muted">Yes, from Profile inside your portal.</p></details>
+  </section>
+
+  <section class="band"><h2>Ready to start your journey?</h2><a class="btn" href="/admission">Apply today</a></section>
+</main>
+<%- include('partials/footer') %>

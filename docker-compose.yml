@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment: { POSTGRES_PASSWORD: password, POSTGRES_DB: easylearn }
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL","pg_isready -U postgres"], interval: 5s, retries: 10 }
+  app:
+    build: .
+    depends_on: { db: { condition: service_healthy } }
+    ports: ["3000:3000"]
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/easylearn
+      SESSION_SECRET: change-me-please-use-a-long-random-string
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin
+      NODE_ENV: development
+      INSTITUTE_NAME: EasyLearn Hub
+volumes: { pgdata: {} }

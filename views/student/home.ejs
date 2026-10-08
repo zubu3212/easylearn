@@ -1,0 +1,31 @@
+<%- include('../partials/header', { title: 'My Portal' }) %>
+<main class="wrap">
+  <div class="bar"><h1>Welcome back, <%= user.username %> 👋</h1><button class="btn" data-print type="button">🖨 Print result card</button></div>
+  <section class="grid4">
+    <div class="card stat s1"><span><%= avg !== null ? avg.toFixed(1) : '—' %></span>Average marks</div>
+    <div class="card stat s2"><span><%= gpa !== null ? gpa.toFixed(2) : '—' %></span>GPA (4.0 scale)</div>
+    <div class="card stat s3"><span><%= rows.length %></span>Courses graded</div>
+    <div class="card stat s4"><span><%= rank ? '#' + rank.pos : '—' %></span><%= rank ? 'Rank of ' + rank.total : 'Rank' %></div>
+  </section>
+
+  <% if (news.length) { %><h2>📣 Announcements</h2>
+    <% news.forEach(a => { %><div class="card note"><div><b><%= a.title %></b><p><%= a.body %></p><small class="muted"><%= a.created_at.toLocaleDateString() %></small></div></div><% }) %><% } %>
+
+  <h2>My Results</h2>
+  <% if (!rows.length) { %><p class="muted">No results published yet.</p><% } else { %>
+  <div class="scroll"><table><tr><th>Course</th><th>Marks</th><th></th><th>Grade</th></tr>
+    <% rows.forEach(r => { %><tr><td><%= r.title %></td><td><%= r.marks %></td>
+      <td class="wide"><progress value="<%= r.marks %>" max="100"></progress></td>
+      <td><span class="badge g-<%= r.grade === 'F' ? 'f' : 'ok' %>"><%= r.grade %></span></td></tr><% }) %>
+  </table></div><% } %>
+
+  <% if (att.length) { %><h2>🗓 Attendance</h2>
+  <div class="scroll"><table><tr><th>Course</th><th>Present</th><th></th><th>%</th></tr>
+    <% att.forEach(a => { const pc = Math.round(a.pres / a.total * 100); %><tr><td><%= a.title %></td><td><%= a.pres %> / <%= a.total %></td>
+      <td class="wide"><progress value="<%= pc %>" max="100"></progress></td><td><span class="badge <%= pc >= 75 ? 'accepted' : 'rejected' %>"><%= pc %>%</span></td></tr><% }) %>
+  </table></div><% } %>
+
+  <h2>Courses offered</h2>
+  <section class="grid3"><% courses.forEach(c => { %><div class="card"><h3><%= c.title %></h3><p class="muted"><%= c.description %></p></div><% }) %></section>
+</main>
+<%- include('../partials/footer') %>

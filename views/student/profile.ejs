@@ -1,0 +1,21 @@
+<%- include('../partials/header', { title: 'Profile' }) %>
+<main class="wrap">
+  <h1>My Profile</h1>
+  <section class="grid2">
+    <form method="post" action="/student/profile" class="card form">
+      <h3>Details</h3><input type="hidden" name="_csrf" value="<%= csrf %>">
+      <label>Username<input value="<%= p.username %>" disabled></label>
+      <label>Email<input type="email" name="email" value="<%= p.email %>" required></label>
+      <label>Phone<input name="phone" value="<%= p.phone || '' %>" pattern="[0-9+\-\s]{7,20}"></label>
+      <button class="btn primary">Save</button>
+    </form>
+    <form method="post" action="/student/password" class="card form">
+      <h3>Change password</h3><input type="hidden" name="_csrf" value="<%= csrf %>">
+      <label>Current password<input type="password" name="current" required autocomplete="current-password"></label>
+      <label>New password<input type="password" name="next" minlength="8" required autocomplete="new-password"></label>
+      <label>Confirm new password<input type="password" name="confirm" minlength="8" required autocomplete="new-password"></label>
+      <button class="btn primary">Update password</button>
+    </form>
+  </section>
+</main>
+<%- include('../partials/footer') %>

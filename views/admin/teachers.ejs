@@ -1,0 +1,17 @@
+<%- include('../partials/header') %>
+<main class="wrap">
+  <h1>Teachers <small class="muted">· <%= rows.length %></small></h1>
+  <% if (!rows.length) { %><p class="muted">No teacher signups yet.</p><% } else { %>
+  <div class="scroll"><table><tr><th>Teacher</th><th>Phone</th><th>Status</th><th>Signed up</th><th></th></tr>
+    <% rows.forEach(t => { %><tr>
+      <td><span class="avatar"><%= t.username[0].toUpperCase() %></span><b><%= t.username %></b><br><small class="muted"><%= t.email %></small></td>
+      <td><%= t.phone %></td>
+      <td><span class="badge <%= t.approved ? 'accepted' : 'pending' %>"><%= t.approved ? 'approved' : 'pending' %></span></td>
+      <td><%= t.created_at.toLocaleDateString() %></td>
+      <td class="nowrap">
+        <% if (!t.approved) { %><form method="post" action="/admin/teachers/<%= t.id %>/approve" class="inline"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn ok">Approve</button></form><% } %>
+        <form method="post" action="/admin/teachers/<%= t.id %>/delete" class="inline"><input type="hidden" name="_csrf" value="<%= csrf %>">
+          <button class="btn danger" data-confirm="Remove this teacher?">Remove</button></form></td></tr><% }) %>
+  </table></div><% } %>
+</main>
+<%- include('../partials/footer') %>

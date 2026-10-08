@@ -1,0 +1,20 @@
+<%- include('../partials/header') %>
+<main class="wrap">
+  <h1>Attendance</h1>
+  <form method="get" class="card bar">
+    <select name="course"><% courses.forEach(c => { %><option value="<%= c.id %>" <%= c.id === cid ? 'selected' : '' %>><%= c.title %></option><% }) %></select>
+    <input type="date" name="date" value="<%= day %>" required>
+    <button class="btn">Load</button>
+  </form>
+  <% if (!cid) { %><p class="muted">Add a course first.</p><% } else if (!students.length) { %><p class="muted">No students yet.</p><% } else { %>
+  <form method="post" action="/admin/attendance">
+    <input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="course_id" value="<%= cid %>"><input type="hidden" name="date" value="<%= day %>">
+    <div class="bar"><button class="btn" type="button" data-check-all>☑ Toggle all</button><button class="btn primary">Save attendance</button></div>
+    <div class="scroll"><table><tr><th>Student</th><th>Present</th><th>Saved</th></tr>
+      <% students.forEach(s => { %><tr><td><span class="avatar"><%= s.username[0].toUpperCase() %></span><%= s.username %></td>
+        <td><input type="checkbox" name="present" value="<%= s.id %>" <%= s.present === null || s.present ? 'checked' : '' %>></td>
+        <td><% if (s.present === null) { %><span class="badge">not marked</span><% } else { %><span class="badge <%= s.present ? 'accepted' : 'rejected' %>"><%= s.present ? 'present' : 'absent' %></span><% } %></td></tr><% }) %>
+    </table></div>
+  </form><% } %>
+</main>
+<%- include('../partials/footer') %>

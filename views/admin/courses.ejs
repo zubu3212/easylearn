@@ -1,0 +1,20 @@
+<%- include('../partials/header', { title: 'Courses' }) %>
+<main class="wrap">
+  <h1>Courses</h1>
+  <form method="post" action="/admin/courses" class="card bar">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <input name="title" placeholder="Course title" required maxlength="100">
+    <input name="description" class="grow" placeholder="Short description" maxlength="500">
+    <button class="btn primary">+ Add course</button>
+  </form>
+  <% rows.forEach(c => { %>
+  <form method="post" action="/admin/courses/<%= c.id %>/update" class="card bar">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <input name="title" value="<%= c.title %>" required maxlength="100">
+    <input name="description" class="grow" value="<%= c.description || '' %>" maxlength="500">
+    <span class="muted"><%= c.n %> results</span>
+    <button class="btn ok">Save</button>
+    <button class="btn danger" formaction="/admin/courses/<%= c.id %>/delete" data-confirm="Delete this course and all its results?">Delete</button>
+  </form><% }) %>
+</main>
+<%- include('../partials/footer') %>

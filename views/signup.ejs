@@ -1,0 +1,20 @@
+<%- include('partials/header') %>
+<main class="wrap narrow">
+  <form method="post" action="/signup" class="card form">
+    <h1>Create account</h1>
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label>I am a
+      <select name="role">
+        <option value="student" <%= f.role !== 'teacher' ? 'selected' : '' %>>Student</option>
+        <option value="teacher" <%= f.role === 'teacher' ? 'selected' : '' %>>Teacher (needs admin approval)</option>
+      </select></label>
+    <label>Username<input name="username" value="<%= f.username || '' %>" required pattern="[a-zA-Z0-9_.]{3,30}" title="3-30 letters, numbers, _ or ." autocomplete="username"></label>
+    <label>Email<input type="email" name="email" value="<%= f.email || '' %>" required autocomplete="email"></label>
+    <label>Phone<input name="phone" value="<%= f.phone || '' %>" pattern="[0-9+\-\s]{7,20}" autocomplete="tel"></label>
+    <label>Password<input type="password" name="password" minlength="8" required autocomplete="new-password"></label>
+    <label>Confirm password<input type="password" name="confirm" minlength="8" required autocomplete="new-password"></label>
+    <button class="btn primary">Sign up</button>
+    <p class="center muted">Already have an account? <a href="/login">Login</a></p>
+  </form>
+</main>
+<%- include('partials/footer') %>

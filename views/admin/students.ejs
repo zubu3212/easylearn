@@ -1,0 +1,23 @@
+<%- include('../partials/header', { title: 'Students' }) %>
+<main class="wrap">
+  <h1>Students <small class="muted">· <%= total %></small></h1>
+  <div class="bar">
+    <form method="get" class="inline"><input name="q" value="<%= q %>" placeholder="Search name or email"><button class="btn">Search</button></form>
+    <div><a class="btn" href="/admin/students.csv?q=<%= encodeURIComponent(q) %>">⬇ CSV</a> <a class="btn primary" href="/admin/students/new">+ Add Student</a></div>
+  </div>
+  <% if (!rows.length) { %><p class="muted">No students found.</p><% } else { %>
+  <div class="scroll"><table><tr><th>Student</th><th>Phone</th><th>Avg marks</th><th>Joined</th><th></th></tr>
+    <% rows.forEach(s => { %><tr>
+      <td><span class="avatar"><%= s.username[0].toUpperCase() %></span><b><%= s.username %></b><br><small class="muted"><%= s.email %></small></td>
+      <td><%= s.phone %></td><td><%= s.avg ?? '—' %></td><td><%= s.created_at.toLocaleDateString() %></td>
+      <td class="nowrap"><a class="btn" href="/admin/students/<%= s.id %>/edit">Edit</a>
+        <form method="post" action="/admin/students/<%= s.id %>/delete" class="inline">
+        <input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger" data-confirm="Delete this student and their results?">Delete</button></form></td></tr><% }) %>
+  </table></div>
+  <div class="pager">
+    <% if (page > 1) { %><a class="btn" href="?q=<%= encodeURIComponent(q) %>&page=<%= page - 1 %>">← Prev</a><% } %>
+    <span class="muted">Page <%= page %> / <%= pages %></span>
+    <% if (page < pages) { %><a class="btn" href="?q=<%= encodeURIComponent(q) %>&page=<%= page + 1 %>">Next →</a><% } %>
+  </div><% } %>
+</main>
+<%- include('../partials/footer') %>

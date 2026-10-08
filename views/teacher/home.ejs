@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+<main class="wrap">
+  <h1>Welcome, <%= user.username %> 👋</h1>
+  <section class="grid4">
+    <div class="card stat s1"><span><%= s.students %></span>Students</div>
+    <div class="card stat s3"><span><%= s.courses %></span>Courses</div>
+    <div class="card stat s4"><span><%= s.results %></span>Results entered</div>
+  </section>
+  <h2>Quick actions</h2>
+  <section class="grid3">
+    <a class="card tile" href="/admin/attendance"><h3>🗓 Take attendance</h3><p class="muted">Mark present/absent per course and day.</p></a>
+    <a class="card tile" href="/admin/results"><h3>🏆 Enter results</h3><p class="muted">Add or update student marks.</p></a>
+    <a class="card tile" href="/admin/announcements"><h3>📣 Post announcement</h3><p class="muted">Notify all students.</p></a>
+  </section>
+  <% if (news.length) { %><h2>Latest announcements</h2>
+    <% news.forEach(a => { %><div class="card note"><div><b><%= a.title %></b><p><%= a.body %></p><small class="muted"><%= a.created_at.toLocaleDateString() %></small></div></div><% }) %><% } %>
+</main>
+<%- include('../partials/footer') %>

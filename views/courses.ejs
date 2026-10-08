@@ -1,0 +1,9 @@
+<%- include('partials/header') %>
+<main class="wrap"><h1 class="center">Our Courses</h1>
+  <section class="grid3">
+    <% courses.forEach(c => { %>
+      <div class="card"><% if (c.image) { %><img class="rounded" src="/img/<%= c.image %>" alt="<%= c.title %>"><% } %>
+        <h3><%= c.title %></h3><p class="muted"><%= c.description %></p><a class="btn" href="/admission">Apply</a></div>
+    <% }) %>
+  </section></main>
+<%- include('partials/footer') %>

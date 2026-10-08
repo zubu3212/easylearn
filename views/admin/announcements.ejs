@@ -1,0 +1,14 @@
+<%- include('../partials/header', { title: 'Announcements' }) %>
+<main class="wrap">
+  <h1>Announcements</h1>
+  <form method="post" action="/admin/announcements" class="card form">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label>Title<input name="title" required maxlength="120"></label>
+    <label>Message<textarea name="body" rows="3" required maxlength="2000"></textarea></label>
+    <button class="btn primary">📣 Publish to students</button>
+  </form>
+  <% rows.forEach(a => { %><div class="card note"><div><b><%= a.title %></b><p><%= a.body %></p><small class="muted"><%= a.created_at.toLocaleString() %></small></div>
+    <form method="post" action="/admin/announcements/<%= a.id %>/delete"><input type="hidden" name="_csrf" value="<%= csrf %>">
+    <button class="btn danger" data-confirm="Delete announcement?">✕</button></form></div><% }) %>
+</main>
+<%- include('../partials/footer') %>

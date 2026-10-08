@@ -1,0 +1,20 @@
+<%- include('../partials/header', { title: 'Results' }) %>
+<main class="wrap">
+  <div class="bar"><h1>Results</h1><a class="btn" href="/admin/results.csv">⬇ CSV</a></div>
+  <form method="post" action="/admin/results" class="card bar">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <select name="student_id" required><option value="">Student…</option>
+      <% students.forEach(s => { %><option value="<%= s.id %>"><%= s.username %></option><% }) %></select>
+    <select name="course_id" required><option value="">Course…</option>
+      <% courses.forEach(c => { %><option value="<%= c.id %>"><%= c.title %></option><% }) %></select>
+    <input type="number" name="marks" min="0" max="100" placeholder="Marks (0-100)" required>
+    <button class="btn primary">Save</button>
+  </form>
+  <% if (!rows.length) { %><p class="muted">No results yet.</p><% } else { %>
+  <div class="scroll"><table><tr><th>Student</th><th>Course</th><th>Marks</th><th>Grade</th><th></th></tr>
+    <% rows.forEach(r => { %><tr><td><%= r.username %></td><td><%= r.title %></td><td><%= r.marks %></td><td><%= grade(r.marks) %></td>
+      <td><form method="post" action="/admin/results/<%= r.id %>/delete" class="inline" data-confirm="Delete this result?">
+        <input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger">Delete</button></form></td></tr><% }) %>
+  </table></div><% } %>
+</main>
+<%- include('../partials/footer') %>

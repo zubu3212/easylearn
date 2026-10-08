@@ -1,0 +1,6 @@
+<% if (shell) { %></div></div><% } else { %>
+<footer class="footer"><b><%= brand %></b> · <%= site.tagline %><br>
+  <% if (site.phone) { %>📞 <%= site.phone %> <% } %><% if (site.email) { %>· ✉️ <%= site.email %><% } %><br>© <%= new Date().getFullYear() %> <%= brand %>. All rights reserved.</footer>
+<% } %>
+<script src="/app.js"></script>
+</body></html>

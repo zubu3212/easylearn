@@ -1,0 +1,27 @@
+<%- include('../partials/header', { title: 'Admissions' }) %>
+<main class="wrap">
+  <h1>Admission Requests</h1>
+  <div class="tabs">
+    <% [['', 'All'], ['pending', 'Pending'], ['accepted', 'Accepted'], ['rejected', 'Rejected'], ['enrolled', 'Enrolled']].forEach(t => { %>
+      <a href="/admin/admissions<%= t[0] ? '?status=' + t[0] : '' %>" class="<%= st === t[0] ? 'on' : '' %>"><%= t[1] %></a><% }) %>
+  </div>
+  <% if (!rows.length) { %><p class="muted">Nothing here.</p><% } else { %>
+  <div class="scroll"><table><tr><th>Applicant</th><th>Contact</th><th>Message</th><th>Status</th><th>Actions</th></tr>
+    <% rows.forEach(a => { %><tr>
+      <td><b><%= a.name %></b><br><small class="muted"><%= a.created_at.toLocaleDateString() %></small></td>
+      <td><%= a.email %><br><small class="muted"><%= a.phone %></small></td>
+      <td class="msg"><%= a.message %></td>
+      <td><span class="badge <%= a.status %>"><%= a.status %></span></td>
+      <td class="nowrap">
+        <form method="post" action="/admin/admissions/<%= a.id %>/status" class="inline">
+          <input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="back" value="<%= st %>">
+          <% if (a.status !== 'enrolled') { %><button class="btn primary" formaction="/admin/admissions/<%= a.id %>/enroll" data-confirm="Create a student account for <%= a.name %>?">Enroll</button><% } %>
+          <% if (a.status !== 'accepted' && a.status !== 'enrolled') { %><button class="btn ok" name="status" value="accepted">Accept</button><% } %>
+          <% if (a.status !== 'rejected' && a.status !== 'enrolled') { %><button class="btn warn" name="status" value="rejected">Reject</button><% } %>
+        </form>
+        <form method="post" action="/admin/admissions/<%= a.id %>/delete" class="inline">
+          <input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger" data-confirm="Delete this request?">✕</button></form>
+      </td></tr><% }) %>
+  </table></div><% } %>
+</main>
+<%- include('../partials/footer') %>

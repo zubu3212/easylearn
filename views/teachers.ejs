@@ -1,0 +1,10 @@
+<%- include('partials/header') %>
+<main class="wrap"><h1 class="center">Our Teachers</h1>
+  <section class="grid3">
+    <% [['teacher1.png','Jhankar Mahbub','Web developer with strong full-stack and project-based teaching skills.'],
+        ['teacher2.png','Ryan Ahmed','Specialist in creative design, branding and visual communication.'],
+        ['teacher3.png','Daniel Hasan','Digital marketer skilled in SEO, social media and online advertising.']].forEach(t => { %>
+      <div class="card"><img class="rounded" src="/img/<%= t[0] %>" alt="<%= t[1] %>"><h3><%= t[1] %></h3><p class="muted"><%= t[2] %></p></div>
+    <% }) %>
+  </section></main>
+<%- include('partials/footer') %>
