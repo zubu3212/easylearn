@@ -40,3 +40,9 @@ Rewrite of the PHP/MySQL Student Management System.
 ## Default admin
 `admin` / `admin` (set by `.env`; see `.env.example`). Already have a database with a different admin password? Run `npm run admin:reset`.
 **Change the password (Profile page) before giving the site to a customer.**
+<img width="1915" height="840" alt="image" src="https://github.com/user-attachments/assets/f71bfa7c-6f93-48a2-abe5-e207ce69242f" />
+
+<img width="1881" height="690" alt="image" src="https://github.com/user-attachments/assets/07e3c1b3-cdf6-42e2-a7af-4fadf7fa7559" />
+
+<img width="1915" height="808" alt="image" src="https://github.com/user-attachments/assets/f2d6fe80-b91c-441c-8d94-82959fa78c97" />
+
