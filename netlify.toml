@@ -1,0 +1,13 @@
+[build]
+  publish = "public"
+  command = "echo 'No build step'"
+
+[functions]
+  node_bundler = "nft"
+  included_files = ["views/**"]
+
+# Anything that isn't a static file in /public goes to the Express app
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200

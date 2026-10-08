@@ -2,8 +2,15 @@
   "name": "easylearn-hub",
   "version": "2.0.0",
   "private": true,
-  "scripts": { "start": "node server.js", "dev": "node --watch server.js", "db:init": "node scripts/init-db.js", "db:seed": "node scripts/seed-demo.js", "admin:reset": "node scripts/init-db.js --reset" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "db:init": "node scripts/init-db.js",
+    "db:seed": "node scripts/seed-demo.js",
+    "admin:reset": "node scripts/init-db.js --reset"
+  },
   "dependencies": {
+    "@netlify/database": "^2.0.1",
     "bcryptjs": "^2.4.3",
     "connect-pg-simple": "^10.0.0",
     "dotenv": "^16.4.5",
@@ -12,6 +19,7 @@
     "express-rate-limit": "^7.4.0",
     "express-session": "^1.18.0",
     "helmet": "^8.0.0",
-    "pg": "^8.12.0"
+    "pg": "^8.12.0",
+    "serverless-http": "^4.0.0"
   }
 }

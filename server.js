@@ -3,8 +3,9 @@ const express = require('express'), session = require('express-session'), helmet
   rateLimit = require('express-rate-limit'), bcrypt = require('bcryptjs'), crypto = require('crypto'),
   path = require('path'), PgStore = require('connect-pg-simple')(session), pool = require('./db');
 
-if (!process.env.SESSION_SECRET) throw new Error('SESSION_SECRET is required');
-const app = express(), prod = process.env.NODE_ENV === 'production';
+const onNetlify = !process.env.DATABASE_URL;
+const app = express(), prod = process.env.NODE_ENV === 'production' || onNetlify;
+if (!process.env.SESSION_SECRET && !onNetlify) throw new Error('SESSION_SECRET is required');
 if (prod) app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -12,11 +13,30 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(helmet({ contentSecurityPolicy: { directives: { defaultSrc: ["'self'"], imgSrc: ["'self'", 'data:'], styleSrc: ["'self'"], scriptSrc: ["'self'"], formAction: ["'self'"] } } }));
 app.use(express.urlencoded({ extended: false, limit: '20kb' }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: prod ? '7d' : 0 }));
-app.use(session({
-  store: new PgStore({ pool, createTableIfMissing: true }),
-  secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: 'lax', secure: prod, maxAge: 24 * 3600 * 1000 }
-}));
+// One-time startup: session secret (env or auto-generated + stored in DB) and default admin account.
+let sessionMw, ready;
+async function init() {
+  let secret = process.env.SESSION_SECRET;
+  if (!secret) {
+    await pool.query(`INSERT INTO settings (key,value) VALUES ('session_secret',$1) ON CONFLICT (key) DO NOTHING`, [crypto.randomBytes(48).toString('hex')]);
+    secret = (await pool.query(`SELECT value FROM settings WHERE key='session_secret'`)).rows[0].value;
+  }
+  const { rows } = await pool.query(`SELECT 1 FROM users WHERE role='admin' LIMIT 1`);
+  if (!rows.length) {
+    const u = process.env.ADMIN_USERNAME || 'admin', p = process.env.ADMIN_PASSWORD || 'admin';
+    await pool.query(`INSERT INTO users (username,email,password_hash,role,approved) VALUES ($1,$2,$3,'admin',true) ON CONFLICT (username) DO NOTHING`,
+      [u, `${u}@easylearn.local`, await bcrypt.hash(p, 12)]);
+  }
+  sessionMw = session({
+    store: new PgStore({ pool, createTableIfMissing: !onNetlify }),
+    secret, resave: false, saveUninitialized: false,
+    cookie: { httpOnly: true, sameSite: 'lax', secure: onNetlify ? 'auto' : prod, maxAge: 24 * 3600 * 1000 }
+  });
+}
+app.use((req, res, next) => {
+  ready = ready || init().catch(e => { ready = null; throw e; });
+  ready.then(() => sessionMw(req, res, next), next);
+});
 
 // ---------- helpers ----------
 const flash = (req, type, msg) => { req.session.flash = { type, msg }; };
@@ -31,6 +51,7 @@ const need = role => (req, res, next) => {
   next();
 };
 app.locals.grade = grade;
+Object.assign(app.locals, { csrf: '', user: null, flash: null, path: '', shell: false }); // defaults so error pages render before session setup
 const homeOf = r => ({ admin: '/admin', teacher: '/teacher', student: '/student' }[r] || '/');
 app.locals.homeOf = homeOf;
 const E = process.env;
@@ -422,5 +443,8 @@ app.use((err, req, res, next) => {
   res.status(500).render('error', { msg: 'Something went wrong. Please try again.' });
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`EasyLearn Hub running on http://localhost:${port}`));
+module.exports = app;
+if (require.main === module) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => console.log(`EasyLearn Hub running on http://localhost:${port}`));
+}

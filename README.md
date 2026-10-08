@@ -40,3 +40,9 @@ Rewrite of the PHP/MySQL Student Management System.
 ## Default admin
 `admin` / `admin` (set by `.env`; see `.env.example`). Already have a database with a different admin password? Run `npm run admin:reset`.
 **Change the password (Profile page) before giving the site to a customer.**
+
+## Deploying on Netlify
+- The Express app runs as a Netlify Function (`netlify/functions/server.js`); `/public` is served from the CDN.
+- Data lives in **Netlify Database** (managed Postgres). Tables are created by `netlify/database/migrations/` on deploy — no `DATABASE_URL` needed.
+- Optional site env vars: `SESSION_SECRET` (otherwise one is generated and stored in the DB), `ADMIN_USERNAME` / `ADMIN_PASSWORD` (used to create the first admin; default `admin` / `admin`), and the branding vars above.
+- **Log in and change the admin password right after the first deploy.**
